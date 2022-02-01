@@ -9,8 +9,8 @@ module.exports = function(app) {
       next();
     });
     
-app.post("/api/message/add", controller.addMessage);
+    app.post("/api/message/add", controller.addMessage);
 
-app.get("/api/message/all", controller.allMessages);
+    app.get("/api/message/all", controller.allMessages);
 
-}
+};

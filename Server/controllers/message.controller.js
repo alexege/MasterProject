@@ -1,7 +1,7 @@
-// const { message } = require("../../Client/src/store/message.module");
 const db = require("../models");
-const Message = require("../models/message.model")
-const msg = require("../../Client/src/store/message.module");
+const User = db.user;
+const Role = db.role;
+const Message = db.message;
 
 exports.addMessage = (req, res) => {
     
@@ -22,7 +22,11 @@ exports.addMessage = (req, res) => {
 }
 
 exports.allMessages = (req, res) => {
-    res.status(200).send("All Messages");
-    console.log("All messages returning all messages");
-    return msg.find({});
+    Message.find({}, (err, messages) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+        res.status(200).send({ messages })
+    })
 }
