@@ -1,6 +1,4 @@
-// import MessageService from '../services/message.service';
-
-const MessageService = require("../services/message.service");
+import MessageService from '../services/message.service';
 
 const initialState =  {
     msg: 'default value'
@@ -30,8 +28,8 @@ export const message = {
             error => {
                 commit('getAllMessagesFailure', message);
                 return Promise.reject(error);
-            })
-        }
+            });
+        },
     },
     mutations: {
         addMessageSuccess(state, message) {

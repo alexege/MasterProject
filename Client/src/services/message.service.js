@@ -5,36 +5,29 @@ const user = JSON.parse(localStorage.getItem('user'));
 
 class MessageService {
     addMessage(msg) {
-        return axios.post("http://localhost:8080/api/message/add", { 
+        return axios.post(API_URL + "add", { 
             title: msg.title, 
             body: msg.body, 
             author: user.id
         })
         .then(res => {
             console.log("res: ", res);
+            console.log("user: ", user.username);
         })
         .catch(err => {
             console.log("err: ", err);
         })
-        // console.log("addMessage - message.service.js");
-        // return axios.post(API_URL + 'add', {
-        //     title: "test",
-        //     body: "test body"
-        // })
-        // .then(res => {
-        //     console.log("res:", res);
-        // })
-        // .catch(err => {
-        //     console.log("error while adding message: ", err);
-        // })
     }
 
     getAllMessages() {
-
-        //re-implement API_URL string
-        return axios.get("http://localhost:8080/api/message/all")
-        .then(res => console.log("res:", res))
-        .catch(err => console.log("err:", err))
+        return axios.get(API_URL + "all")
+        .then(res => {
+            console.log("message: ", res);
+            return res;
+        })
+        .catch(err => {
+            return err;
+        })
     }
 }
 
