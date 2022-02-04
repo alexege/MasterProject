@@ -12,5 +12,9 @@ module.exports = function(app) {
     app.post("/api/message/add", controller.addMessage);
 
     app.get("/api/message/all", controller.allMessages);
+    
+    app.post("/api/message/edit/:id", controller.editMessage);
+    
+    app.delete("/api/message/delete/:id", controller.deleteMessage);
 
 };
