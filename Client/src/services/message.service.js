@@ -19,6 +19,29 @@ class MessageService {
         })
     }
 
+    deleteMessage(id) {
+        return axios.delete(API_URL + `delete/${id}`)
+        .then(res => {
+            console.log("res: ", res);
+        })
+        .catch(err => {
+            console.log("err: ", err);
+        })
+    }
+
+    editMessage(msg) {
+        return axios.post(API_URL + `edit/${msg._id}`, {
+            title: msg.title,
+            body: msg.body
+        })
+        .then(res => {
+            console.log("res: ", res);
+        })
+        .catch(err => {
+            console.log("err: ", err);
+        })
+    }
+
     getAllMessages() {
         return axios.get(API_URL + "all")
         .then(res => {

@@ -36,20 +36,23 @@ exports.deleteMessage = (req, res) => {
 
 exports.editMessage = (req, res) => {
 
-    // const update = {
-    //     title: req.body.title,
-    //     body: req.body.body
-    // }
+    const update = {
+        title: req.body.title,
+        body: req.body.body
+    }
 
-    // message.findOneAndUpdate({ id: req.body._id }, update ,(err, message) => {
-    //     if (err) {
-    //         res.status(500).send({ message: err });
-    //         return;
-    //     }
+    console.log("req:", req.body);
+    console.log(update);
+
+    message.findOneAndUpdate({ id: req.body._id }, update ,(err, message) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
 
     //     res.status(200).send({ message: "Message deleted!" });
-    // })
     res.status(200).send({ message: "Message updated successfully" });
+    })
 }
 
 exports.allMessages = (req, res) => {
@@ -59,5 +62,5 @@ exports.allMessages = (req, res) => {
             return;
         }
         res.status(200).send({ messages })
-    })
+    }).sort([['updatedAt', 'descending']])
 }

@@ -8,7 +8,8 @@ const Message = mongoose.model(
         author: {
             type: mongoose.Schema.Types.ObjectId, ref: 'Author'
         }
-    })
+    },
+    { timestamps: true})
 );
 
 module.exports = Message;
