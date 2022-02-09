@@ -6,6 +6,7 @@ const Role = db.role;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const { refreshToken: RefreshToken } = require("../models");
+const { isValidObjectId } = require("mongoose");
 
 exports.signup = (req, res) => {
     const user = new User({
@@ -20,7 +21,10 @@ exports.signup = (req, res) => {
         return;
       }
   
+      //If the req.body contains a role
       if (req.body.roles) {
+
+        //Find that roles included in the req.body.roles
         Role.find(
           {
             name: { $in: req.body.roles }
@@ -31,13 +35,23 @@ exports.signup = (req, res) => {
               return;
             }
   
+            //Assign the user that role. Map each role base on their id.
             user.roles = roles.map(role => role._id);
+            //Will show the following. A list of available roles:
+            // [
+            //   new isValidObjectId("61e7397043e3b15632f07236"),             user
+            //   new isValidObjectId("61e7397043e3b15632f07237"),             mod
+            //   new isValidObjectId("61e7397043e3b15632f07238"),             admin
+            // ]
+            
+            //Save the changes
             user.save(err => {
               if (err) {
                 res.status(500).send({ message: err });
                 return;
               }
   
+              console.log("final user: ", user);
               res.send({ message: "User was registered successfully!" });
             });
           }

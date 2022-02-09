@@ -1,9 +1,11 @@
 import MessageService from '../services/message.service';
+import UserService from '../services/user.service';
 
 export const message = {
     namespaced: true,
     state: () => ({
-        count: 0
+        count: 0,
+        message: {}
     }),
     actions: {
         addMessage({ commit }, message) {
@@ -19,6 +21,7 @@ export const message = {
         },
 
         deleteMessage({ commit }, message) {
+            console.log("test:", message);
             return MessageService.deleteMessage(message)
             .then(message => {
                 commit('deleteMessageSuccess', message);
@@ -53,12 +56,25 @@ export const message = {
                 return Promise.reject(error);
             });
         },
+        
+        getAllUsers({ commit }, user) {
+            return UserService.getAllUsers()
+            .then(users => {
+                commit('getAllUsersSuccess', user);
+                return Promise.resolve(users);
+            },
+            error => {
+                commit('getAllUsersFailure', user);
+                return Promise.reject(error);
+            });
+        },
     },
     mutations: {
         addMessageSuccess(state, message) {
             console.log("message is: ", message);
             console.log("State is: ", state.count);
-            return state.count++;
+            // return state.count++;
+            state.message = message;
         },
         addMessageFailure(state, message) {
         },
@@ -73,6 +89,10 @@ export const message = {
         getAllMessagesSuccess(state, message) {
         },
         getAllMessagesFailure(state, message) {
+        },
+        getAllUsersSuccess(state, message) {
+        },
+        getAllUsersFailure(state, message) {
         }
     }
 };

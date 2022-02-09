@@ -6,7 +6,8 @@ const Message = mongoose.model(
         title: String,
         body: String,
         author: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'Author'
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
         }
     },
     { timestamps: true})

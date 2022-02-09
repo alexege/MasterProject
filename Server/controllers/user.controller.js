@@ -1,5 +1,14 @@
+const db = require("../models");
+const User = db.user;
+
 exports.allAccess = (req, res) => {
-  res.status(200).send("Public Content.");
+  User.find({}, (err, users) => {
+    if (err) {
+        res.status(500).send({ message: err });
+        return;
+    }
+    res.status(200).send({ users: users })
+  }).sort([['updatedAt', 'descending']])
 };
 
 exports.userBoard = (req, res) => {
@@ -13,3 +22,7 @@ exports.adminBoard = (req, res) => {
 exports.moderatorBoard = (req, res) => {
   res.status(200).send("Moderator Content.");
 };
+
+exports.allUsers = (req, res) => {
+  res.status(200).send("All Users");
+}

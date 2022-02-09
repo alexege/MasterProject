@@ -1,49 +1,60 @@
 <template>
   <div class="container">
-    <header class="jumbotron">
+    <edit-modal
+      v-show="isModalVisible"
+      @close="closeModal"
+      :messageToEdit="messageToEdit"
+      @update-message="updateMessage"
+    />
+    <div :class="{ 'blur-effect': isModalVisible }">
+      <header class="jumbotron">
+        <h2 class="title">Public Forum</h2>
+      </header>
 
-      <h2 class="title">Message Board</h2>
-
-      <!-- Message template -->
       <div class="message">
         <label for="Title">Title:</label>
-        <input type="text" v-model="message.title">
-        <br/>
+        <input type="text" v-model="message.title" />
+        <br />
         <label for="Body">Body:</label>
         <textarea v-model="message.body" />
-        <br/>
-        <input type="submit" value="Submit" class="message-submit" @click="addMessage">
-      </div>
-
-      <div v-if="editMode">
-        <div class="message">
-          <label for="">Title:</label>
-          <input type="text" v-model="messageToEdit.title"> <br>
-          <label for="">Body:</label>
-          <textarea name="messageToEditBody" id="" cols="30" rows="10" v-model="messageToEdit.body"></textarea>
-          <br>
-          <p>Author: {{ messageToEdit.author }}</p>
-          <input type="button" value="Update" @click="updateMessage(messageToEdit._id)">
-        </div>
+        <br />
+        <input
+          type="submit"
+          value="Submit"
+          class="message-submit"
+          @click="addMessage"
+        />
       </div>
 
       <div v-for="message in allMessages" :key="message._id" class="message">
+        <div
+          class="message-options"
+          v-if="message && currentUser && currentUser.id == message.author"
+        >
+          <a href="" @click.prevent="editMessage(message)">edit</a>
+          <span @click.prevent="deleteMessage(message._id)">x</span>
+        </div>
         <h5 class="title">{{ message.title }}</h5>
-        <p>{{ message.body }}</p>
-        <br>
-        {{ message }}
-        <p>Author: {{ message.author }}</p>
-        <input type="button" value="edit" @click="editMessage(message._id, message.title, message.body, message.author)">
-        <input type="submit" value="Delete" class="message-delete" @click="deleteMessage(message._id)">
+        <p class="message-body">{{ message.body }}</p>
+        <div>
+          <span>{{ new Date(message.createdAt).toLocaleString() }}</span>
+          <div v-if="allUsers">
+            <p v-for="user in allUsers" :key="user._id">
+              <span v-if="user._id == message.author">{{ user.username }}</span>
+            </p>
+          </div>
+        </div>
       </div>
-
-    </header>
+    </div>
   </div>
 </template>
 
 <script>
+import EditModal from '../components/editModal';
+
 export default {
   name: 'Home',
+  components: { EditModal },
   data() {
     return {
       currentUser: null,
@@ -56,43 +67,43 @@ export default {
         body: null,
         author: null
       },
-      editMode: false,
-      allMessages: null
+      allMessages: null,
+      allUsers: null,
+
+      isModalVisible: false
     };
   },
   methods: {
     addMessage() {
       //This is not the route. This is specifying the store (message) and then the action (addMessage)
-      return this.$store.dispatch('message/addMessage', this.message)
-      .then(() => {
-        this.message.title = '';
-        this.message.body  = '';
+      return this.$store
+        .dispatch('message/addMessage', this.message)
+        .then(() => {
+          this.message.title = '';
+          this.message.body = '';
+          this.getAllMessages();
+        });
+    },
+
+    deleteMessage(msg) {
+      return this.$store.dispatch(`message/deleteMessage`, msg).then(() => {
         this.getAllMessages();
       });
     },
 
-    deleteMessage(id) {
-      return this.$store.dispatch(`message/deleteMessage`, id)
-      .then(() => {
+    editMessage(message) {
+      this.isModalVisible = true;
+      this.messageToEdit._id = message._id;
+      this.messageToEdit.title = message.title;
+      this.messageToEdit.body = message.body;
+      this.messageToEdit.author = message.author;
+    },
+
+    updateMessage(id) {
+      return this.$store.dispatch(`message/editMessage`, id).then(() => {
+        this.isModalVisible = false;
         this.getAllMessages();
-      })
-    },
-
-    editMessage(id, title, body, author) {
-      console.log("Editing message with id: ", id);
-      this.editMode = !this.editMode;
-      this.messageToEdit._id = id;
-      this.messageToEdit.title = title;
-      this.messageToEdit.body = body;
-      this.messageToEdit.author = author;
-    },
-
-    updateMessage() {
-      return this.$store.dispatch(`message/editMessage`, this.messageToEdit)
-      .then(() => {
-        this.editMode = !this.editMode;
-      })
-      .catch(err => console.log("error:", err));
+      });
     },
 
     getCurrentUser() {
@@ -100,20 +111,43 @@ export default {
     },
 
     getAllMessages() {
-      return this.$store.dispatch('message/getAllMessages')
-      .then(res => {
+      return this.$store.dispatch('message/getAllMessages').then(res => {
         this.allMessages = res.data.messages;
-      })
+      });
+    },
+
+    getAllUsers() {
+      return this.$store.dispatch('message/getAllUsers').then(res => {
+        this.allUsers = res.data.users;
+      });
+    },
+
+    //Modal Logic
+    showModal() {
+      this.isModalVisible = true;
+    },
+    closeModal() {
+      this.isModalVisible = false;
+    }
+  },
+
+  computed: {
+    currMessage() {
+      return this.$store.state.message.message;
     }
   },
 
   mounted() {
     this.getCurrentUser();
     this.getAllMessages();
+    this.getAllUsers();
   }
 };
 </script>
 <style scoped>
+.blur-effect {
+  -webkit-filter: blur(5px) grayscale(90%);
+}
 
 .title {
   text-align: center;
@@ -121,14 +155,47 @@ export default {
 }
 
 .message {
+  position: relative;
   border: 1px solid black;
-  padding: 1em;
-  margin: .5em;
-  background-color:rgb(235, 230, 230);
+  margin: 0.5em;
+  padding: 0.5em;
+  background-color: rgb(235, 230, 230);
+  border-radius: 10px;
+}
+
+.message:hover {
+  background-color: rgba(235, 230, 230, 0.5);
 }
 
 .message > .title {
   text-align: center;
+}
+
+.message > .message-options {
+  position: absolute;
+  margin: 0.5em;
+  /* cursor: pointer; */
+  top: 0;
+  right: 0;
+}
+
+.message > .message-options > a,
+span {
+  margin: 0.25em;
+  cursor: pointer;
+}
+
+.message-delete {
+  position: absolute;
+  margin: 0.5em;
+  padding: 0.25em;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+}
+
+.message-delete:hover {
+  color: white;
 }
 
 textarea {

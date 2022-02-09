@@ -1,11 +1,12 @@
-const { message } = require("../models");
+const { message, user } = require("../models");
 const db = require("../models");
 const User = db.user;
 const Role = db.role;
 const Message = db.message;
 
 exports.addMessage = (req, res) => {
-    
+    console.log("req.body:", req.body);
+
     const message = new Message({
         title: req.body.title,
         body: req.body.body,
@@ -18,17 +19,51 @@ exports.addMessage = (req, res) => {
             return;
         }
 
-        res.status(200).send({ message: "Messsage created!" });
+        if(req.body.author){
+            console.log("User body author was found", req.body.author);
+
+            User.findOne({
+                _id: { $in: req.body.author }
+            },
+            (err, author) => {
+                if(err) {
+                    res.status(500).send({ message: err });
+                    return;
+                }
+                console.log("author: ", author);
+    
+                message.authorName = author;
+
+                message.save(err => {
+                    if (err) {
+                        res.status(500).send({ message: err });
+                        return;
+                    }
+                })
+
+                console.log("new message: ", message);
+                // res.status(200).send({ message: "Message created successfully!" });
+                res.status(200).send({ 
+                    id: message._id,
+                    title: message.title,
+                    body: message.body,
+                    author: author.username
+                })
+            })
+        }
+
+        // res.status(200).send({ message: "Messsage created!" });
     })
 }
 
 exports.deleteMessage = (req, res) => {
-
-    message.deleteOne({ id: req.body._id }, (err, message) => {
+    message.deleteOne({ _id: req.params.id }, (err, message) => {
         if (err) {
             res.status(500).send({ message: err });
             return;
         }
+
+        console.log("Messag: ", message);
 
         res.status(200).send({ message: "Message deleted!" });
     })
@@ -42,12 +77,17 @@ exports.editMessage = (req, res) => {
     }
 
     console.log("req:", req.body);
-    console.log(update);
+    console.log("req:", req.params.id);
 
-    message.findOneAndUpdate({ id: req.body._id }, update ,(err, message) => {
+    // let test = Message.findById({ _id: req.params.id });
+    // console.log("test is: ", test);
+
+    message.findByIdAndUpdate({ _id: req.params.id }, update ,(err, message) => {
         if (err) {
             res.status(500).send({ message: err });
             return;
+        } else {
+            console.log("message: ", message);
         }
 
     //     res.status(200).send({ message: "Message deleted!" });
@@ -62,5 +102,5 @@ exports.allMessages = (req, res) => {
             return;
         }
         res.status(200).send({ messages })
-    }).sort([['updatedAt', 'descending']])
+    }).sort([['createdAt', 'descending']])
 }

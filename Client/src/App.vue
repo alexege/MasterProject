@@ -36,7 +36,7 @@
         <li class="nav-item">
           <router-link to="/profile" class="nav-link">
             <font-awesome-icon icon="user" />
-            <span v-if="currentUser">{{ currentUser.username }}</span>
+            <span v-if="currentUser">  {{ currentUser.username }}</span>
           </router-link>
         </li>
         <li class="nav-item">

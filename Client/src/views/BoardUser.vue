@@ -2,6 +2,7 @@
   <div class="container">
     <header class="jumbotron">
       <h3>{{content}}</h3>
+      <p>Only show messages created by this user</p>
     </header>
   </div>
 </template>
