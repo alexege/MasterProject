@@ -3,6 +3,7 @@ const db = require("../models");
 const User = db.user;
 const Role = db.role;
 const Message = db.message;
+const Comment = db.comment;
 
 exports.addMessage = (req, res) => {
     console.log("req.body:", req.body);
@@ -56,6 +57,46 @@ exports.addMessage = (req, res) => {
     })
 }
 
+exports.addComment = (req, res) => {
+
+    const comment = new Comment({
+        body: req.body.body,
+        author: req.body.author
+    })
+
+    comment.save((err, comment) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+
+        Message.findOne({
+            _id: { $in: req.body.messageId }
+        },
+        (err, message) => {
+            console.log("Message was found: ", message);
+            console.log("Message was found: ", message.comments);
+            if (err) {
+                res.status(500).send({ message: err });
+                return;
+            }
+
+            message.comments.push(comment);
+
+            message.save();
+
+            res.status(200).send({
+                message: "Comment added!"
+            })
+        })
+    })
+
+    console.log("Adding a comment", req.body);
+    message.find({ _id: req.body.messageId }, (err, message) => {
+
+    })
+}
+
 exports.deleteMessage = (req, res) => {
     message.deleteOne({ _id: req.params.id }, (err, message) => {
         if (err) {
@@ -102,5 +143,15 @@ exports.allMessages = (req, res) => {
             return;
         }
         res.status(200).send({ messages })
+    }).sort([['createdAt', 'descending']])
+}
+
+exports.allComments = (req, res) => {
+    Comment.find({}, (err, comments) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+        res.status(200).send({ comments })
     }).sort([['createdAt', 'descending']])
 }

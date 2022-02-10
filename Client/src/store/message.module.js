@@ -20,6 +20,18 @@ export const message = {
             });
         },
 
+        addComment({ commit }, comment) {
+            return MessageService.addComment(comment)
+            .then(comment => {
+                commit('addCommentSuccess', comment);
+                return Promise.resolve(comment);
+            },
+            error => {
+                commit('addCommentFailure', comment);
+                return Promise.reject(error);
+            });
+        },
+
         deleteMessage({ commit }, message) {
             console.log("test:", message);
             return MessageService.deleteMessage(message)
@@ -57,6 +69,18 @@ export const message = {
             });
         },
         
+        getAllComments({ commit }, comments) {
+            return MessageService.getAllComments()
+            .then(comments => {
+                commit('getAllCommentsSuccess', comments);
+                return Promise.resolve(comments);
+            },
+            error => {
+                commit('getAllCommmentsFailure', comments);
+                return Promise.reject(error);
+            });
+        },
+        
         getAllUsers({ commit }, user) {
             return UserService.getAllUsers()
             .then(users => {
@@ -78,6 +102,14 @@ export const message = {
         },
         addMessageFailure(state, message) {
         },
+        addCommentSuccess(state, comment) {
+            console.log("comment is: ", comment);
+            console.log("State is: ", state.count);
+            // return state.count++;
+            state.comment = comment;
+        },
+        addCommentsFailure(state, message) {
+        },
         deleteMessageSuccess(state, message) {
         },
         deleteMessageFailure(state, message) {
@@ -89,6 +121,10 @@ export const message = {
         getAllMessagesSuccess(state, message) {
         },
         getAllMessagesFailure(state, message) {
+        },
+        getAllCommentsSuccess(state, message) {
+        },
+        getAllCommentsFailure(state, message) {
         },
         getAllUsersSuccess(state, message) {
         },

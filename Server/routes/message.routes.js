@@ -9,9 +9,13 @@ module.exports = function(app) {
       next();
     });
     
-    app.post("/api/message/add", controller.addMessage);
+    app.post("/api/message/addMessage", controller.addMessage);
+    
+    app.post("/api/message/addComment", controller.addComment);
 
-    app.get("/api/message/all", controller.allMessages);
+    app.get("/api/message/allMessages", controller.allMessages);
+    
+    app.get("/api/message/allComments", controller.allComments);
     
     app.post("/api/message/edit/:id", controller.editMessage);
     

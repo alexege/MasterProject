@@ -64,8 +64,8 @@ export default {
 
 .content {
   position: relative;
-  min-width: 400px;
-  min-height: 200px;
+  min-width: 800px;
+  min-height: 400px;
   border: 2px solid black;
   border-radius: 10px;
   padding: 1em;
