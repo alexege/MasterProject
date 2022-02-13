@@ -11,7 +11,11 @@ const User = mongoose.model(
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Role"
             }
-        ]
+        ],
+        img: { 
+            data: Buffer, 
+            contentType: String 
+        }
     },
     { timestamps: true})
 );

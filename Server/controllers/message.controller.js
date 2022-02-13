@@ -153,5 +153,5 @@ exports.allComments = (req, res) => {
             return;
         }
         res.status(200).send({ comments })
-    }).sort([['createdAt', 'descending']])
+    }).sort([['createdAt', 'ascending']])
 }
