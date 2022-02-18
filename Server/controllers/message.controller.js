@@ -1,4 +1,4 @@
-const { message, user } = require("../models");
+const { message, user, comment } = require("../models");
 const db = require("../models");
 const User = db.user;
 const Role = db.role;
@@ -42,8 +42,6 @@ exports.addMessage = (req, res) => {
                     }
                 })
 
-                console.log("new message: ", message);
-                // res.status(200).send({ message: "Message created successfully!" });
                 res.status(200).send({ 
                     id: message._id,
                     title: message.title,
@@ -52,8 +50,6 @@ exports.addMessage = (req, res) => {
                 })
             })
         }
-
-        // res.status(200).send({ message: "Messsage created!" });
     })
 }
 
@@ -110,6 +106,19 @@ exports.deleteMessage = (req, res) => {
     })
 }
 
+exports.deleteComment = (req, res) => {
+    comment.deleteOne({ _id: req.params.id }, (err, comment) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+
+        console.log("Messag: ", comment);
+
+        res.status(200).send({ message: "comment deleted!" });
+    })
+}
+
 exports.editMessage = (req, res) => {
 
     const update = {
@@ -133,6 +142,24 @@ exports.editMessage = (req, res) => {
 
     //     res.status(200).send({ message: "Message deleted!" });
     res.status(200).send({ message: "Message updated successfully" });
+    })
+}
+
+exports.editComment = (req, res) => {
+
+    const update = {
+        body: req.body.body
+    }
+
+    comment.findByIdAndUpdate({ _id: req.params.id }, update ,(err, comment) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        } else {
+            console.log("comment: ", comment);
+        }
+
+    res.status(200).send({ message: "Comment updated successfully" });
     })
 }
 

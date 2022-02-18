@@ -9,7 +9,7 @@
         <textarea
           name="messageToEditBody"
           id=""
-          cols="30"
+          cols="80"
           rows="10"
           v-model="messageToEdit.body"
         ></textarea
@@ -19,7 +19,7 @@
           value="Update"
           @click="updateMessage(messageToEdit)"
         />
-        <button type="button" class="btn-close" @click="close">x</button>
+        <button type="button" class="btn-close" @click.prevent="close">x</button>
       </div>
     </div>
   </div>
@@ -69,7 +69,10 @@ export default {
   border: 2px solid black;
   border-radius: 10px;
   padding: 1em;
-  background-color: rgba(255, 255, 255, 0.75);
+  /* background-color: rgba(255, 255, 255, 0.75); */
+  color: black;
+  font-weight: 500;
+  background-color: #1DB954;
   text-align: center;
 }
 </style>

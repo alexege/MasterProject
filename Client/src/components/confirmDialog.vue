@@ -68,7 +68,7 @@ export default {
 
 .ok-btn {
     padding: 0.5em 1em;
-    background-color: #ead5d5;
+    background-color: black;
     color: #ff0000;
     border: 2px solid #ff0000;
     border-radius: 5px;
@@ -80,9 +80,10 @@ export default {
 
 .cancel-btn {
     padding: 0.5em 1em;
-    background-color: #d5eae7;
-    color: #35907f;
-    border: 2px solid #0ec5a4;
+    background-color: black;
+    color: #1DB954;
+    /* border: 2px solid #0ec5a4; */
+    border: none;
     border-radius: 5px;
     font-weight: bold;
     font-size: 16px;

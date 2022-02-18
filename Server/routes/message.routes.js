@@ -9,16 +9,20 @@ module.exports = function(app) {
       next();
     });
     
-    app.post("/api/message/addMessage", controller.addMessage);
-    
-    app.post("/api/message/addComment", controller.addComment);
-
     app.get("/api/message/allMessages", controller.allMessages);
     
     app.get("/api/message/allComments", controller.allComments);
+
+    app.post("/api/message/addMessage", controller.addMessage);
+    
+    app.post("/api/message/addComment", controller.addComment);
     
     app.post("/api/message/edit/:id", controller.editMessage);
     
-    app.delete("/api/message/delete/:id", controller.deleteMessage);
+    app.post("/api/message/editComment/:id", controller.editComment);
+    
+    app.delete("/api/message/deleteMessage/:id", controller.deleteMessage);
+   
+    app.delete("/api/message/deleteComment/:id", controller.deleteComment);
 
 };

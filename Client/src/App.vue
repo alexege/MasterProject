@@ -17,6 +17,9 @@
         <li class="nav-item">
           <router-link v-if="currentUser" to="/user" class="nav-link">User</router-link>
         </li>
+        <li class="nav-item">
+          <router-link to="/todo" class="nav-link">ToDoList</router-link>
+        </li>
       </div>
 
       <div v-if="!currentUser" class="navbar-nav ml-auto">
@@ -82,3 +85,12 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+#app {
+  background-color: #23272A;
+  color: white;
+  min-height: 100vh;
+  color: #1DB954;
+}
+</style>

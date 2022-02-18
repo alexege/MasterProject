@@ -15,10 +15,11 @@ import {
   faSignInAlt,
   faSignOutAlt,
   faTrash,
-  faPencilAlt
+  faPencilAlt,
+  faCheck
 } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt, faTrash, faPencilAlt);
+library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt, faTrash, faPencilAlt, faCheck);
 
 Vue.config.productionTip = false;
 

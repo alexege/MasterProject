@@ -33,7 +33,6 @@ export const message = {
         },
 
         deleteMessage({ commit }, message) {
-            console.log("test:", message);
             return MessageService.deleteMessage(message)
             .then(message => {
                 commit('deleteMessageSuccess', message);
@@ -41,6 +40,18 @@ export const message = {
             },
             error => {
                 commit('deleteMessageFailure', message);
+                return Promise.reject(error);
+            });
+        },
+
+        deleteComment({ commit }, comment) {
+            return MessageService.deleteComment(comment)
+            .then(comment => {
+                commit('deleteCommentSuccess', comment);
+                return Promise.resolve(comment);
+            },
+            error => {
+                commit('deleteCommentFailure', comment);
                 return Promise.reject(error);
             });
         },
@@ -53,6 +64,18 @@ export const message = {
             },
             error => {
                 commit('editMessageFailure', message);
+                return Promise.reject(error);
+            });
+        },
+
+        editComment({ commit }, comment) {
+            return MessageService.editComment(comment)
+            .then(comment => {
+                commit('editCommentSuccess', comment);
+                return Promise.resolve(comment);
+            },
+            error => {
+                commit('editCommentFailure', comment);
                 return Promise.reject(error);
             });
         },
@@ -114,9 +137,17 @@ export const message = {
         },
         deleteMessageFailure(state, message) {
         },
+        deleteCommentSuccess(state, comment) {
+        },
+        deleteCommentFailure(state, comment) {
+        },
         editMessageSuccess(state, message) {
         },
         editMessageFailure(state, message) {
+        },
+        editCommentSuccess(state, comment) {
+        },
+        editCommentFailure(state, comment) {
         },
         getAllMessagesSuccess(state, message) {
         },
