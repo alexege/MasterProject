@@ -12,7 +12,7 @@ const Message = mongoose.model(
         comments: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Comment'
-        }]
+        }],
     },
     { timestamps: true})
 );
